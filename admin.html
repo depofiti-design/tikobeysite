@@ -170,6 +170,12 @@ main{position:relative;z-index:1;max-width:800px;margin:0 auto;width:100%;paddin
   </div>
   <div class="sponsor-list" id="sponsorList"></div>
 
+
+  <!-- BANNERS -->
+  <div class="sec-title" style="margin-top:32px;">Banner Yönetimi</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;" id="bannerGrid">
+    <!-- JS ile doldurulacak -->
+  </div>
 </main>
 
 <div class="toast" id="toast">✓ Kaydedildi!</div>
@@ -220,6 +226,7 @@ function doLogin(){
     document.getElementById('mainHeader').style.display='flex';
     document.getElementById('mainContent').style.display='block';
     loadData().then(() => { buildList(); updateStats(); });
+loadBanners();
   } else {
     attempts++;
     document.getElementById('pwInput').value='';
@@ -277,7 +284,51 @@ async function loadData(){
   });
 }
 
+
+// ---- BANNER YÖNETİMİ ----
+let banners = [];
+
+async function loadBanners() {
+  try {
+    const r = await fetch(SUPA_URL + "/rest/v1/banners?order=slot.asc", {headers: sbHeaders()});
+    banners = await r.json();
+    renderBanners();
+  } catch(e) { console.log("Banner load error", e); }
+}
+
+function renderBanners() {
+  const g = document.getElementById('bannerGrid');
+  if(!g) return;
+  g.innerHTML = '';
+  banners.forEach((b, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:16px;';
+    const slotNames = ['Üst Sol', 'Üst Sağ', 'Alt Sol (Masaüstü)', 'Alt Sağ (Masaüstü)'];
+    div.innerHTML = `
+      <div style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;color:var(--acc);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">
+        Banner ${b.slot} — ${slotNames[i]||''}
+      </div>
+      ${b.image_url ? `<img src="${b.image_url}" style="width:100%;height:60px;object-fit:cover;border-radius:7px;margin-bottom:10px;">` : `<div style="width:100%;height:60px;background:var(--bg3);border-radius:7px;margin-bottom:10px;display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:12px;">Görsel yok</div>`}
+      <div class="field" style="margin-bottom:8px;"><label>Görsel URL (GIF/PNG/JPG)</label><input type="text" value="${b.image_url||''}" placeholder="https://..." oninput="banners[${i}].image_url=this.value" style="background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;color:var(--tx);font-size:12px;font-family:'Barlow',sans-serif;outline:none;width:100%;"></div>
+      <div class="field" style="margin-bottom:8px;"><label>Tıklanınca Git (URL)</label><input type="text" value="${b.link_url||''}" placeholder="https://..." oninput="banners[${i}].link_url=this.value" style="background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;color:var(--tx);font-size:12px;font-family:'Barlow',sans-serif;outline:none;width:100%;"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx2);cursor:pointer;">
+        <input type="checkbox" ${b.visible?'checked':''} onchange="banners[${i}].visible=this.checked"> Görünür
+      </label>`;
+    g.appendChild(div);
+  });
+}
+
+async function saveBanners() {
+  for(const b of banners) {
+    await fetch(SUPA_URL + "/rest/v1/banners?slot=eq." + b.slot, {
+      method: "PATCH", headers: sbHeaders(),
+      body: JSON.stringify({image_url: b.image_url, link_url: b.link_url, visible: b.visible})
+    });
+  }
+}
+
 async function saveAll(){
+  await saveBanners();
   // Collect featured
   ['logo','logo2','title','link','b1','b1l','b2','b2l','b3','b3l'].forEach(k => {
     const el = document.getElementById('f-'+k);
