@@ -613,26 +613,6 @@ document.addEventListener('keydown', function(e) {
 const SUPA_URL = "https://rfuwnjsyulpmdyespacd.supabase.co";
 const SUPA_KEY = "sb_publishable_BeRLk3mCeFsA2MqHPKQ0CA_CvbzLdyd";
 
-
-async function loadBanners() {
-  try {
-    const r = await fetch(SUPA_URL + "/rest/v1/banners?order=slot.asc&visible=eq.true", {
-      headers: {"apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY}
-    });
-    const data = await r.json();
-    if(!data || !data.length) return;
-    const slots = ['b-slot-1','b-slot-2','b-slot-3','b-slot-4'];
-    data.forEach(b => {
-      const el = document.getElementById('b-slot-'+b.slot);
-      if(!el) return;
-      if(b.image_url) {
-        el.innerHTML = '<img src="'+b.image_url+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;">';
-        if(b.link_url && b.link_url !== '#') el.href = b.link_url;
-      }
-    });
-  } catch(e) { console.log("Banner load error", e); }
-}
-
 async function loadFromSupabase() {
   try {
     const r = await fetch(SUPA_URL + "/rest/v1/sponsors?order=sort_order.asc", {
@@ -663,6 +643,33 @@ async function loadFromSupabase() {
       if (fa) fa.href = f.link || "#";
     }
   } catch(e) { console.log("Supabase error", e); }
+}
+
+async function loadBanners() {
+  try {
+    const r = await fetch(SUPA_URL + "/rest/v1/banners?order=slot.asc", {
+      headers: {"apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY}
+    });
+    const data = await r.json();
+    if (!data || !data.length) return;
+    data.forEach(b => {
+      const el = document.getElementById('b-slot-' + b.slot);
+      if (!el) return;
+      if (b.image_url && b.image_url.length > 5) {
+        el.style.border = 'none';
+        el.style.background = 'transparent';
+        el.style.padding = '0';
+        const img = document.createElement('img');
+        img.src = b.image_url;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;';
+        img.onerror = function() { this.style.display = 'none'; };
+        el.innerHTML = '';
+        el.appendChild(img);
+        if (b.link_url && b.link_url !== '#') el.href = b.link_url;
+        else el.removeAttribute('href');
+      }
+    });
+  } catch(e) { console.log("Banner load error", e); }
 }
 
 // INIT
