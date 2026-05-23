@@ -613,6 +613,26 @@ document.addEventListener('keydown', function(e) {
 const SUPA_URL = "https://rfuwnjsyulpmdyespacd.supabase.co";
 const SUPA_KEY = "sb_publishable_BeRLk3mCeFsA2MqHPKQ0CA_CvbzLdyd";
 
+
+async function loadBanners() {
+  try {
+    const r = await fetch(SUPA_URL + "/rest/v1/banners?order=slot.asc&visible=eq.true", {
+      headers: {"apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY}
+    });
+    const data = await r.json();
+    if(!data || !data.length) return;
+    const slots = ['b-slot-1','b-slot-2','b-slot-3','b-slot-4'];
+    data.forEach(b => {
+      const el = document.getElementById('b-slot-'+b.slot);
+      if(!el) return;
+      if(b.image_url) {
+        el.innerHTML = '<img src="'+b.image_url+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:10px;">';
+        if(b.link_url && b.link_url !== '#') el.href = b.link_url;
+      }
+    });
+  } catch(e) { console.log("Banner load error", e); }
+}
+
 async function loadFromSupabase() {
   try {
     const r = await fetch(SUPA_URL + "/rest/v1/sponsors?order=sort_order.asc", {
@@ -648,6 +668,7 @@ async function loadFromSupabase() {
 // INIT
 loadSponsors();
 loadFromSupabase().then(() => renderGrid());
+loadBanners();
 </script>
 </body>
 </html>
