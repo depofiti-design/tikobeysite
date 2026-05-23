@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikoBey</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --acc: #ff6b00; --acc2: #ff9500;
+  --ag: rgba(255,107,0,0.13); --ab: rgba(255,107,0,0.28);
+  --bg: #080d14; --bg2: #0d1520; --bg3: #111c2a;
+  --card: #0f1a28; --cardh: #152234;
+  --brd: rgba(255,255,255,0.07); --brd2: rgba(255,255,255,0.13);
+  --tx: #e8edf5; --tx2: #8a9ab5; --tx3: #4a5a70;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 55% 40% at 10% 15%,rgba(255,107,0,0.05) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(8,13,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd);height:62px;display:flex;align-items:center;padding:0 24px;gap:6px;}
+.nav-logo{font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:var(--tx);letter-spacing:1px;margin-right:10px;white-space:nowrap;cursor:pointer;}
+.nav-logo span{color:var(--acc);}
+.nl{font-size:13px;font-weight:500;color:var(--tx2);padding:6px 12px;border-radius:7px;text-decoration:none;transition:all .2s;cursor:pointer;white-space:nowrap;}
+.nl:hover{color:var(--tx);background:rgba(255,255,255,0.05);}
+.nl.act{color:var(--acc);}
+.nav-drop{position:relative;}
+.nd-menu{position:absolute;top:calc(100% + 8px);left:0;background:var(--bg2);border:1px solid var(--brd);border-radius:10px;padding:6px;min-width:175px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:all .2s;z-index:300;}
+.nav-drop:hover .nd-menu{opacity:1;visibility:visible;transform:translateY(0);}
+.di{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;text-decoration:none;color:var(--tx2);font-size:13px;font-weight:500;transition:all .2s;}
+.di:hover{background:rgba(255,255,255,0.05);color:var(--tx);}
+.nav-r{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.btn-tg{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:#fff;background:#0088cc;padding:7px 15px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap;}
+.btn-tg:hover{background:#0099dd;transform:translateY(-1px);}
+.btn-duyuru{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:#fff;background:linear-gradient(135deg,#ff6b00,#ff9500);padding:7px 14px;border-radius:8px;text-decoration:none;transition:all .2s;white-space:nowrap;letter-spacing:.3px;position:relative;overflow:hidden;}
+.btn-duyuru::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1),transparent);pointer-events:none;}
+.btn-duyuru:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(255,107,0,0.35);}
+.btn-ib{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--acc);background:var(--ag);border:1px solid var(--ab);padding:7px 15px;border-radius:8px;text-decoration:none;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-ib:hover{background:var(--acc);color:#fff;transform:translateY(-1px);}
+.ham{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;margin-left:auto;}
+.ham span{display:block;width:24px;height:2px;background:var(--tx);border-radius:2px;}
+
+/* MOBILE MENU */
+.mm-ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);}
+.mm-ov.open{display:flex;}
+.mm-panel{background:var(--bg2);width:280px;height:100%;padding:20px 18px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--brd);overflow-y:auto;}
+.mm-logo{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;margin-bottom:16px;color:var(--tx);}
+.mm-logo span{color:var(--acc);}
+.mm-lnk{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:9px;text-decoration:none;color:var(--tx2);font-size:14px;font-weight:500;transition:all .2s;cursor:pointer;}
+.mm-lnk:hover,.mm-lnk.act{background:var(--ag);color:var(--acc);}
+.mm-lnk svg{width:18px;height:18px;flex-shrink:0;}
+.mm-sep{height:1px;background:var(--brd);margin:6px 0;}
+
+/* PAGES */
+.page{display:none;}.page.active{display:block;}
+
+/* PAGE HEADER */
+.ph{position:relative;z-index:1;padding:32px 20px 22px;text-align:center;}
+.ph h1{font-family:'Rajdhani',sans-serif;font-size:clamp(24px,5vw,44px);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;}
+.ph h1 span{color:var(--acc);}
+.divider{width:48px;height:3px;background:linear-gradient(90deg,var(--acc),var(--acc2));margin:10px auto;border-radius:2px;}
+.ph p{color:var(--tx2);font-size:14px;max-width:460px;margin:0 auto;}
+
+/* BANNER ZONES */
+.bwrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 18px;}
+.bzone{position:relative;background:var(--bg3);border:2px dashed rgba(255,107,0,0.2);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .3s;display:block;text-decoration:none;}
+.bzone:hover{border-color:rgba(255,107,0,0.45);}
+.bzone img,.bzone video{width:100%;height:100%;object-fit:cover;display:block;}
+.bph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--tx3);padding:16px;}
+.bph svg{width:30px;height:30px;opacity:.35;}
+.bph p{font-size:12px;text-align:center;line-height:1.5;}
+.bph span{font-size:10px;opacity:.55;}
+.b2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.b-half{height:90px;}
+.desk-only{}
+@media(max-width:768px){.desk-only{display:none!important;}.b2{grid-template-columns:1fr;}.b-half{height:80px;}}
+
+
+/* SEARCH */
+.srch-w{position:relative;z-index:1;max-width:520px;margin:0 auto 20px;padding:0 18px;}
+.srch{width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:11px 16px 11px 42px;color:var(--tx);font-size:14px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;}
+.srch:focus{border-color:var(--ab);}
+.srch::placeholder{color:var(--tx3);}
+.srch-ic{position:absolute;left:32px;top:50%;transform:translateY(-50%);color:var(--tx3);pointer-events:none;}
+.fwrap{position:relative;z-index:1;display:flex;gap:7px;justify-content:center;flex-wrap:wrap;padding:0 18px;margin-bottom:24px;}
+.fb{font-family:'Barlow',sans-serif;font-size:13px;font-weight:500;color:var(--tx2);background:var(--bg3);border:1px solid var(--brd);border-radius:20px;padding:5px 15px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.fb:hover{color:var(--tx);border-color:var(--ab);}
+.fb.act{color:var(--acc);border-color:var(--acc);background:var(--ag);}
+.cbadge{background:var(--ag);color:var(--acc);border-radius:20px;padding:1px 7px;font-size:11px;font-weight:600;margin-left:3px;}
+
+/* FEATURED */
+.fw{position:relative;z-index:1;max-width:1100px;margin:0 auto 24px;padding:0 18px;}
+.fc{background:linear-gradient(135deg,rgba(255,107,0,0.06) 0%,var(--bg3) 50%,rgba(41,121,255,0.03) 100%);border:1px solid var(--ab);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:20px;position:relative;overflow:hidden;cursor:pointer;transition:all .3s;text-decoration:none;color:inherit;}
+.fc:hover{border-color:var(--acc);transform:translateY(-2px);}
+.fc-lbl{position:absolute;top:13px;right:13px;background:var(--acc);color:#fff;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;}
+.fc-logo{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#fff;min-width:100px;text-align:center;}
+.fc-logo span{color:var(--acc);}
+.fc-info{flex:1;}
+.fc-info h3{font-family:'Rajdhani',sans-serif;font-size:19px;font-weight:700;margin-bottom:4px;}
+.fc-info p{color:var(--tx2);font-size:13px;line-height:1.5;}
+.fc-bons{display:flex;gap:9px;flex-wrap:wrap;}
+.bp{background:rgba(255,255,255,0.05);border:1px solid var(--brd);border-radius:8px;padding:7px 12px;text-align:center;}
+.bp .num{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--acc2);line-height:1;}
+.bp .lbl{font-size:10px;color:var(--tx3);margin-top:1px;}
+
+/* SPONSOR GRID */
+.mwrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 18px 80px;}
+.stitle{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.stitle::after{content:'';flex:1;height:1px;background:var(--brd);}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:32px;}
+
+/* SPONSOR CARD */
+.sc{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:16px 14px 14px;cursor:pointer;transition:all .25s;display:flex;flex-direction:column;gap:9px;text-decoration:none;color:inherit;position:relative;overflow:hidden;}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--logo-c1,var(--acc)),var(--logo-c2,var(--acc2)));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.sc:hover{background:var(--cardh);border-color:rgba(255,107,0,0.3);transform:translateY(-3px);}
+.sc:hover::after{transform:scaleX(1);}
+.ctop{display:flex;align-items:flex-start;justify-content:space-between;gap:7px;}
+.clogo{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;line-height:1.2;}
+.ctag{font-size:10px;font-weight:600;letter-spacing:.4px;padding:2px 7px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+.t-hot{background:rgba(255,23,68,0.12);color:#ff5252;border:1px solid rgba(255,23,68,0.2);}
+.t-new{background:rgba(0,230,118,0.1);color:#00e676;border:1px solid rgba(0,230,118,0.18);}
+.t-tr{background:rgba(41,121,255,0.1);color:#5c9eff;border:1px solid rgba(41,121,255,0.18);}
+.t-vip{background:rgba(170,0,255,0.1);color:#cc66ff;border:1px solid rgba(170,0,255,0.18);}
+.t-gl{background:rgba(245,166,35,0.1);color:#f5a623;border:1px solid rgba(245,166,35,0.18);}
+.cbon{font-size:12px;color:var(--tx2);line-height:1.5;min-height:32px;}
+.cbon strong{color:var(--acc2);font-weight:600;}
+.cbtn{display:flex;align-items:center;justify-content:space-between;background:var(--ag);border:1px solid var(--ab);border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:var(--acc);font-family:'Rajdhani',sans-serif;transition:all .2s;margin-top:auto;}
+.sc:hover .cbtn{background:var(--acc);color:#fff;border-color:var(--acc);}
+.cbtn svg{width:12px;height:12px;transition:transform .2s;}
+.sc:hover .cbtn svg{transform:translateX(3px);}
+
+/* YAYINLAR */
+.ywrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 18px 80px;}
+.ygrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ycard{border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s;display:block;border:1px solid var(--brd);}
+.ycard:hover{transform:translateY(-4px);}
+.yhero{height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.yh-yt{background:linear-gradient(135deg,#1a0000,#280000);}
+.yh-kick{background:linear-gradient(135deg,#001600,#001a00);}
+.yinfo{padding:15px;background:var(--card);}
+.yname{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;margin-bottom:3px;}
+.ydesc{font-size:12px;color:var(--tx2);line-height:1.5;margin-bottom:10px;}
+.ybtn{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;padding:7px 14px;border-radius:8px;font-family:'Rajdhani',sans-serif;}
+.yb-yt{background:rgba(255,0,0,0.13);color:#ff5252;border:1px solid rgba(255,0,0,0.18);}
+.yb-kick{background:rgba(83,252,24,0.1);color:#53fc18;border:1px solid rgba(83,252,24,0.18);}
+
+/* İŞ BİRLİĞİ MODAL */
+.mov{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;}
+.mov.open{display:flex;}
+.mbox{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:28px 24px;max-width:440px;width:100%;position:relative;}
+.mclose{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:20px;padding:4px;transition:color .2s;}
+.mclose:hover{color:var(--tx);}
+.mtitle{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;margin-bottom:5px;}
+.mtitle span{color:var(--acc);}
+.msub{color:var(--tx2);font-size:13px;margin-bottom:20px;line-height:1.5;}
+.mlinks{display:flex;flex-direction:column;gap:9px;}
+.mlink{display:flex;align-items:center;gap:13px;background:var(--bg3);border:1px solid var(--brd);border-radius:11px;padding:13px 16px;text-decoration:none;color:var(--tx);transition:all .2s;}
+.mlink:hover{border-color:var(--ab);}
+.mli{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ml-tg{background:rgba(0,136,204,0.14);}
+.ml-mail{background:rgba(255,107,0,0.12);}
+.ml-teams{background:rgba(98,100,167,0.15);}
+.mlt{font-size:14px;font-weight:600;}
+.mls{font-size:11px;color:var(--tx3);margin-top:1px;}
+.mla{margin-left:auto;color:var(--tx3);}
+
+/* ADMIN PANEL */
+.admin-ov{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+.admin-ov.open{display:flex;}
+.admin-box{background:var(--bg2);border:1px solid rgba(255,107,0,0.2);border-radius:16px;padding:28px 24px;max-width:700px;width:100%;margin:auto;position:relative;}
+.admin-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px;}
+.admin-title span{color:var(--acc);}
+.admin-sub{color:var(--tx2);font-size:12px;margin-bottom:22px;}
+.admin-list{display:flex;flex-direction:column;gap:10px;max-height:70vh;overflow-y:auto;padding-right:4px;}
+.admin-list::-webkit-scrollbar{width:4px;}
+.admin-list::-webkit-scrollbar-track{background:transparent;}
+.admin-list::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
+.arow{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.arow-head{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.arow-num{font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--tx3);font-weight:600;letter-spacing:1px;}
+.arow-preview{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;}
+.afield{display:flex;flex-direction:column;gap:4px;}
+.afield label{font-size:11px;color:var(--tx3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.afield input,.afield select{background:var(--bg2);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;color:var(--tx);font-size:13px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;width:100%;}
+.afield input:focus,.afield select:focus{border-color:var(--ab);}
+.afield.full{grid-column:1/-1;}
+.arow-colors{grid-column:1/-1;display:flex;gap:12px;align-items:center;}
+.color-pick{display:flex;flex-direction:column;gap:4px;}
+.color-pick label{font-size:11px;color:var(--tx3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.color-pick input[type=color]{width:48px;height:32px;border:1px solid var(--brd);border-radius:6px;padding:2px;background:var(--bg2);cursor:pointer;}
+.asave{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;}
+.abtn{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;padding:10px 22px;border-radius:9px;cursor:pointer;transition:all .2s;border:none;letter-spacing:.3px;}
+.abtn-save{background:var(--acc);color:#fff;}
+.abtn-save:hover{background:var(--acc2);}
+.abtn-cancel{background:var(--bg3);color:var(--tx2);border:1px solid var(--brd);}
+.abtn-cancel:hover{color:var(--tx);}
+
+/* MOBILE BOTTOM NAV */
+.mbnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(6,10,16,0.97);border-top:1px solid var(--brd);padding:7px 0 env(safe-area-inset-bottom,7px);backdrop-filter:blur(20px);}
+.mbni{display:flex;justify-content:space-around;}
+.mbni-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 8px;text-decoration:none;color:var(--tx3);font-size:9px;font-weight:500;transition:color .2s;cursor:pointer;min-width:50px;}
+.mbni-item.act{color:var(--acc);}
+.mbni-item svg{width:21px;height:21px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){.nav-r{display:none;}.ham{display:flex;}nav{padding:0 16px;}}
+@media(max-width:768px){.mbnav{display:block;}.sgrid{grid-template-columns:1fr 1fr;gap:8px;}.fc{flex-direction:column;gap:12px;}.fc-logo{min-width:unset;}.mwrap,.ywrap{padding:0 12px 90px;}.fw,.bwrap{padding:0 12px;}.ygrid{grid-template-columns:1fr;}.arow{grid-template-columns:1fr;}}
+@media(max-width:380px){.sgrid{grid-template-columns:1fr 1fr;gap:6px;}.sc{padding:11px 10px;}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.sc{animation:fadeUp .35s ease both;}
+.sc:nth-child(1){animation-delay:.03s}.sc:nth-child(2){animation-delay:.06s}.sc:nth-child(3){animation-delay:.09s}
+.sc:nth-child(4){animation-delay:.12s}.sc:nth-child(5){animation-delay:.15s}.sc:nth-child(6){animation-delay:.18s}
+.sc:nth-child(7){animation-delay:.21s}.sc:nth-child(8){animation-delay:.24s}.sc:nth-child(9){animation-delay:.27s}
+.sc:nth-child(10){animation-delay:.30s}.sc:nth-child(11){animation-delay:.33s}.sc:nth-child(12){animation-delay:.36s}
+.sc:nth-child(13){animation-delay:.39s}.sc:nth-child(14){animation-delay:.42s}.sc:nth-child(15){animation-delay:.45s}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('sponsorlar')">TIKO<span>BEY</span></div>
+  <div style="display:flex;align-items:center;gap:2px;" class="nav-links-desktop">
+    <span class="nl act" onclick="showPage('sponsorlar')">Sponsorlar</span>
+    <div class="nav-drop">
+      <span class="nl" style="display:flex;align-items:center;gap:4px;">Yayın <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
+      <div class="nd-menu">
+        <a class="di" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+          YouTube Kanalı
+        </a>
+        <a class="di" href="#" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 32 18"><text x="0" y="15" font-size="15" font-weight="900" fill="#53fc18" font-family="Arial Black">KICK</text></svg>
+          Kick Kanalı
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="nav-r">
+    <a class="btn-duyuru" href="https://t.me/tikobeyduru" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.01 9.46c-.148.663-.537.825-1.088.513l-3-2.21-1.447 1.394c-.16.16-.294.294-.603.294l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.19 14.73l-2.95-.92c-.641-.2-.654-.641.136-.948l11.527-4.443c.534-.194 1.001.13.659.83z"/></svg>
+      ⭐ Duyuru Kanalı
+    </a>
+    <a class="btn-tg" href="https://t.me/tikobeyduru" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.01 9.46c-.148.663-.537.825-1.088.513l-3-2.21-1.447 1.394c-.16.16-.294.294-.603.294l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.19 14.73l-2.95-.92c-.641-.2-.654-.641.136-.948l11.527-4.443c.534-.194 1.001.13.659.83z"/></svg>
+      Telegram
+    </a>
+
+    <div class="nav-drop ib-drop">
+      <span class="btn-ib">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        İş Birliği
+      </span>
+      <div class="nd-menu" style="right:0;left:auto;min-width:200px;">
+        <a class="di" href="https://t.me/tikobeymarketing" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#0088cc"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.01 9.46c-.148.663-.537.825-1.088.513l-3-2.21-1.447 1.394c-.16.16-.294.294-.603.294l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.19 14.73l-2.95-.92c-.641-.2-.654-.641.136-.948l11.527-4.443c.534-.194 1.001.13.659.83z"/></svg>
+          Telegram
+        </a>
+        <a class="di" href="https://teams.microsoft.com/l/chat/0/0?users=tikobeymarketing@outlook.com" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#6264a7"><path d="M19.195 7.241a3.003 3.003 0 1 0-2.39-2.391 3.003 3.003 0 0 0 2.39 2.391zM14.5 8h3.924c.594 0 1.076.482 1.076 1.076v4.173a3.571 3.571 0 0 1-3.571 3.571h-.107a3.571 3.571 0 0 1-3.108-1.814A5.006 5.006 0 0 1 9.5 15.5H9a5 5 0 0 1-5-5v-1.5A1.5 1.5 0 0 1 5.5 7.5h4A1.5 1.5 0 0 1 11 9v3a3 3 0 0 0 3.5 2.959V9.076C14.5 8.482 14.5 8 14.5 8zM9.5 6.5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0z"/></svg>
+          Teams
+        </a>
+        <a class="di" href="mailto:tikobeymarketing@outlook.com">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          Mail
+        </a>
+      </div>
+    </div>
+    <span title="Yönetici Paneli" onclick="openAdmin()" style="cursor:pointer;color:var(--tx3);padding:6px;border-radius:7px;transition:color .2s;display:flex;align-items:center;" onmouseover="this.style.color='var(--acc)'" onmouseout="this.style.color='var(--tx3)'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </span>
+  </div>
+  <div class="ham" onclick="openMM()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mm-ov" id="mmOv" onclick="closeMM(event)">
+  <div class="mm-panel">
+    <div class="mm-logo">TIKO<span>BEY</span></div>
+    <span class="mm-lnk act" onclick="showPage('sponsorlar');closeMM()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Sponsorlar
+    </span>
+    <a class="mm-lnk" href="#" target="_blank">
+      <svg viewBox="0 0 24 24" fill="#ff0000" width="18" height="18"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YouTube
+    </a>
+    <a class="mm-lnk" href="#" target="_blank">
+      <svg viewBox="0 0 32 20" width="18" height="18"><text x="0" y="16" font-size="14" font-weight="900" fill="#53fc18" font-family="Arial Black">KICK</text></svg>Kick
+    </a>
+    <span class="mm-lnk" onclick="openIB();closeMM()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>İş Birliği
+    </span>
+    <div class="mm-sep"></div>
+    <a class="btn-duyuru" href="https://t.me/tikobeyduru" target="_blank" style="justify-content:center;margin:4px 0;">⭐ Duyuru Kanalı</a>
+    <a class="btn-tg" href="https://t.me/tikobeyduru" target="_blank" style="justify-content:center;margin-top:6px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.01 9.46c-.148.663-.537.825-1.088.513l-3-2.21-1.447 1.394c-.16.16-.294.294-.603.294l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.19 14.73l-2.95-.92c-.641-.2-.654-.641.136-.948l11.527-4.443c.534-.194 1.001.13.659.83z"/></svg>
+      Telegram Topluluğu
+    </a>
+    <div class="mm-sep"></div>
+    <span class="mm-lnk" onclick="openAdmin();closeMM()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Yönetici Paneli
+    </span>
+  </div>
+</div>
+
+<!-- SPONSORLAR PAGE -->
+<div class="page active" id="page-sponsorlar">
+  <!-- ÜST: 2 banner yan yana — mobil + masaüstü -->
+  <div class="bwrap" style="margin-top:14px;">
+    <div class="b2">
+      <a class="bzone b-half" href="#" target="_blank" style="background:linear-gradient(135deg,rgba(255,107,0,0.05) 0%,var(--bg3) 100%);">
+        <div class="bph" style="flex-direction:row;justify-content:flex-start;gap:16px;padding:0 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:22px;height:22px;flex-shrink:0;"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+          <div style="text-align:left;">
+            <p style="font-size:13px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.5px;">BANNER ALANI 1</p>
+            <span style="font-size:11px;">Sponsor görseli veya GIF — 540×90px</span>
+          </div>
+        </div>
+      </a>
+      <a class="bzone b-half" href="#" target="_blank" style="background:linear-gradient(135deg,rgba(255,107,0,0.05) 0%,var(--bg3) 100%);">
+        <div class="bph" style="flex-direction:row;justify-content:flex-start;gap:16px;padding:0 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:22px;height:22px;flex-shrink:0;"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+          <div style="text-align:left;">
+            <p style="font-size:13px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.5px;">BANNER ALANI 2</p>
+            <span style="font-size:11px;">Sponsor görseli veya GIF — 540×90px</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="ph" style="padding-top:18px;">
+    <h1>Sponsor<span>lar</span></h1>
+    <div class="divider"></div>
+    <p>TikoBey'in güvenilir platformları — özel bonuslar ve fırsatlar</p>
+  </div>
+  <!-- ALT: 2 banner yan yana — sadece masaüstü -->
+  <div class="bwrap desk-only">
+    <div class="b2">
+      <a class="bzone b-half" href="#" target="_blank" style="background:linear-gradient(135deg,rgba(255,107,0,0.05) 0%,var(--bg3) 100%);">
+        <div class="bph" style="flex-direction:row;justify-content:flex-start;gap:16px;padding:0 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:22px;height:22px;flex-shrink:0;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <div style="text-align:left;">
+            <p style="font-size:13px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.5px;">BANNER ALANI 3</p>
+            <span style="font-size:11px;">Sponsor görseli veya GIF — Sadece masaüstü</span>
+          </div>
+        </div>
+      </a>
+      <a class="bzone b-half" href="#" target="_blank" style="background:linear-gradient(135deg,rgba(255,107,0,0.05) 0%,var(--bg3) 100%);">
+        <div class="bph" style="flex-direction:row;justify-content:flex-start;gap:16px;padding:0 20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:22px;height:22px;flex-shrink:0;"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <div style="text-align:left;">
+            <p style="font-size:13px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.5px;">BANNER ALANI 4</p>
+            <span style="font-size:11px;">Sponsor görseli veya GIF — Sadece masaüstü</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="srch-w">
+    <span class="srch-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+    <input class="srch" type="text" placeholder="Sponsor ara..." id="srchIn" oninput="filterCards()">
+  </div>
+  <div class="fwrap">
+    <button class="fb act" onclick="setF('all',this)">Tümü <span class="cbadge" id="cntBadge">15</span></button>
+    <button class="fb" onclick="setF('tr',this)">🇹🇷 Türkiye</button>
+    <button class="fb" onclick="setF('global',this)">🌍 Global</button>
+    <button class="fb" onclick="setF('casino',this)">🎰 Casino</button>
+    <button class="fb" onclick="setF('spor',this)">⚽ Spor</button>
+    <button class="fb" onclick="setF('crypto',this)">₿ Crypto</button>
+  </div>
+  <div class="fw">
+    <a class="fc" href="#" target="_blank" id="featured-link">
+      <div class="fc-lbl">ÖZEL</div>
+      <div class="fc-logo" id="featured-logo">BET<span>TURKEY</span></div>
+      <div class="fc-info">
+        <h3 id="featured-title">Türkiye'nin En Büyük Platformu</h3>
+        <p id="featured-desc">İlk yatırımında %100 bonus, çevrimsiz 1.000₺ deneme bonusu. Sınırsız çekim.</p>
+      </div>
+      <div class="fc-bons">
+        <div class="bp"><div class="num">%100</div><div class="lbl">İlk Yatırım</div></div>
+        <div class="bp"><div class="num">1000₺</div><div class="lbl">Deneme B.</div></div>
+        <div class="bp"><div class="num">%35</div><div class="lbl">Crypto B.</div></div>
+      </div>
+    </a>
+  </div>
+  <div class="mwrap">
+    <div class="stitle">Tüm Sponsorlar</div>
+    <div class="sgrid" id="sgrid"></div>
+  </div>
+</div>
+
+<!-- YAYINLAR PAGE -->
+<div class="page" id="page-yayin">
+  <div class="ph"><h1>Ya<span>yın</span></h1><div class="divider"></div><p>Canlı yayınlar ve kanallar</p></div>
+  <div class="bwrap" style="margin-bottom:20px;">
+    <a class="bzone b-full" href="#" target="_blank"><div class="bph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg><p>Yayın Duyuru Banner</p><span>1100×100px</span></div></a>
+  </div>
+  <div class="ywrap">
+    <div class="ygrid">
+      <a class="ycard" href="#" target="_blank">
+        <div class="yhero yh-yt"><div style="width:58px;height:58px;border-radius:14px;background:rgba(255,0,0,0.13);display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></div><div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#ff5252;">YouTube</div></div>
+        <div class="yinfo"><div class="yname">TikoBey YouTube</div><div class="ydesc">Casino & bahis videoları, canlı yayın kayıtları. Hemen abone ol!</div><span class="ybtn yb-yt">Kanala Git →</span></div>
+      </a>
+      <a class="ycard" href="#" target="_blank">
+        <div class="yhero yh-kick"><div style="width:58px;height:58px;border-radius:14px;background:rgba(83,252,24,0.1);display:flex;align-items:center;justify-content:center;"><svg width="36" height="22" viewBox="0 0 50 28"><text x="0" y="22" font-size="22" font-weight="900" fill="#53fc18" font-family="Arial Black">KICK</text></svg></div><div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#53fc18;">Kick</div></div>
+        <div class="yinfo"><div class="yname">TikoBey Kick</div><div class="ydesc">Canlı casino ve slot yayınları. Gerçek zamanlı büyük vuruşlar!</div><span class="ybtn yb-kick">Kanala Git →</span></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- İŞ BİRLİĞİ MODAL -->
+<div class="mov" id="ibMov" onclick="closeIBOut(event)">
+  <div class="mbox">
+    <button class="mclose" onclick="closeIB()">✕</button>
+    <div class="mtitle">İş <span>Birliği</span></div>
+    <div class="msub">Reklam, sponsorluk ve marketing iş birlikleri için tercih ettiğiniz kanaldan ulaşın.</div>
+    <div class="mlinks">
+      <a class="mlink" href="https://t.me/tikobeymarketing" target="_blank">
+        <div class="mli ml-tg"><svg width="20" height="20" viewBox="0 0 24 24" fill="#0088cc"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.01 9.46c-.148.663-.537.825-1.088.513l-3-2.21-1.447 1.394c-.16.16-.294.294-.603.294l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.19 14.73l-2.95-.92c-.641-.2-.654-.641.136-.948l11.527-4.443c.534-.194 1.001.13.659.83z"/></svg></div>
+        <div><div class="mlt">Telegram Marketing</div><div class="mls">@tikobey_marketing — Hızlı iletişim</div></div>
+        <svg class="mla" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="mlink" href="mailto:tikobeymarketing@outlook.com" target="_blank">
+        <div class="mli ml-mail"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+        <div><div class="mlt">E-Posta</div><div class="mls">tikobeymarketing@outlook.com</div></div>
+        <svg class="mla" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a class="mlink" href="https://teams.microsoft.com/l/chat/0/0?users=tikobeymarketing@outlook.com" target="_blank">
+        <div class="mli ml-teams"><svg width="20" height="20" viewBox="0 0 24 24" fill="#6264a7"><path d="M19.195 7.241a3.003 3.003 0 1 0-2.39-2.391 3.003 3.003 0 0 0 2.39 2.391zM14.5 8h3.924c.594 0 1.076.482 1.076 1.076v4.173a3.571 3.571 0 0 1-3.571 3.571h-.107a3.571 3.571 0 0 1-3.108-1.814A5.006 5.006 0 0 1 9.5 15.5H9a5 5 0 0 1-5-5v-1.5A1.5 1.5 0 0 1 5.5 7.5h4A1.5 1.5 0 0 1 11 9v3a3 3 0 0 0 3.5 2.959V9.076C14.5 8.482 14.5 8 14.5 8zM9.5 6.5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0z"/></svg></div>
+        <div><div class="mlt">Microsoft Teams</div><div class="mls">Kurumsal görüşmeler</div></div>
+        <svg class="mla" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMİN PANELİ -->
+<div class="admin-ov" id="adminOv" onclick="closeAdminOut(event)">
+  <div class="admin-box">
+    <button class="mclose" onclick="closeAdmin()">✕</button>
+    <div class="admin-title">Yönetici <span>Paneli</span></div>
+    <div class="admin-sub">Sponsor kartlarını düzenle. Değişiklikler anında uygulanır ve tarayıcıya kaydedilir.</div>
+    <div class="admin-list" id="adminList"></div>
+    <div class="asave">
+      <button class="abtn abtn-cancel" onclick="closeAdmin()">Kapat</button>
+      <button class="abtn abtn-save" onclick="saveAll()">💾 Kaydet & Uygula</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mbnav">
+  <div class="mbni">
+    <div class="mbni-item act" onclick="showPage('sponsorlar')" id="mn-sp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Sponsorlar</div>
+    <div class="mbni-item" onclick="showPage('yayin')" id="mn-yy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>Yayın</div>
+    <a class="mbni-item" href="https://t.me/tikobeyduru" target="_blank" style="color:var(--acc);"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.01 9.46c-.148.663-.537.825-1.088.513l-3-2.21-1.447 1.394c-.16.16-.294.294-.603.294l.213-3.053 5.56-5.023c.242-.213-.054-.332-.373-.12L7.19 14.73l-2.95-.92c-.641-.2-.654-.641.136-.948l11.527-4.443c.534-.194 1.001.13.659.83z"/></svg>⭐ Duyuru</a>
+    <div class="mbni-item" onclick="openIB()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>İş Birliği</div>
+  </div>
+</div>
+
+<script>
+// ---- DEFAULT SPONSOR DATA ----
+const defaultSponsors = [
+  {name1:"Stake",name2:"",c1:"#ff6b00",c2:"#ff6b00",tag:"global",tagLabel:"GLOBAL",tagClass:"t-gl",bonus:"<strong>$21 Bonus</strong> — Kayıt olana anında. Çevrimsiz.",link:"#",cat:"global casino"},
+  {name1:"1x",name2:"BET",c1:"#2979ff",c2:"#e8edf5",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"<strong>%100 Hoş Geldin</strong> — Global dev. Spor + casino kombine.",link:"#",cat:"global spor casino"},
+  {name1:"Grand",name2:"Pasha",c1:"#e8edf5",c2:"#ff9500",tag:"tr",tagLabel:"TR",tagClass:"t-tr",bonus:"Tıkla üye ol, <strong>1.000₺ nakit</strong> kazan.",link:"#",cat:"tr spor casino"},
+  {name1:"Roma",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"new",tagLabel:"YENİ",tagClass:"t-new",bonus:"Linke özel <strong>1.000₺ bonus</strong>. Limitsiz çekim.",link:"#",cat:"tr casino"},
+  {name1:"Prada",name2:"Bet",c1:"#e8edf5",c2:"#aa00ff",tag:"tr",tagLabel:"TR",tagClass:"t-tr",bonus:"<strong>%1000 Deneme B.</strong> — %100 ilk yatırım. 100₺ min.",link:"#",cat:"tr casino"},
+  {name1:"Casi",name2:"Bom",c1:"#e8edf5",c2:"#ff6b00",tag:"new",tagLabel:"YENİ",tagClass:"t-new",bonus:"<strong>%1000 Deneme B.</strong> — %300 ilk yatırım.",link:"#",cat:"tr casino"},
+  {name1:"Mars",name2:"Bahis",c1:"#e8edf5",c2:"#e8edf5",tag:"global",tagLabel:"GLOBAL",tagClass:"t-gl",bonus:"Spor bahislerinde <strong>%50 ilk yatırım</strong>.",link:"#",cat:"global spor"},
+  {name1:"Rise",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"<strong>%444 Deneme B.</strong> — %100 hoş geldin bonusu.",link:"#",cat:"global casino"},
+  {name1:"Vizyon",name2:"Bet",c1:"#00e676",c2:"#e8edf5",tag:"tr",tagLabel:"TR",tagClass:"t-tr",bonus:"<strong>%555 Deneme B.</strong> — %100 ilk yatırım.",link:"#",cat:"tr spor"},
+  {name1:"Hyper",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"Linke özel <strong>%15 anlık kayıp bonusu</strong>.",link:"#",cat:"global casino"},
+  {name1:"Bet",name2:"Mani",c1:"#e8edf5",c2:"#ff9500",tag:"new",tagLabel:"YENİ",tagClass:"t-new",bonus:"İlk yatırıma özel <strong>%50 nakit iade</strong>.",link:"#",cat:"tr casino"},
+  {name1:"Pia",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"tr",tagLabel:"TR",tagClass:"t-tr",bonus:"Freespin kodu: <strong>tikobeyPia</strong>. Bonus + spin.",link:"#",cat:"tr spor casino"},
+  {name1:"Black",name2:"Xbet",c1:"#2979ff",c2:"#e8edf5",tag:"global",tagLabel:"GLOBAL",tagClass:"t-gl",bonus:"Çapraz çekim + <strong>%250 havale bonusu</strong>.",link:"#",cat:"global casino"},
+  {name1:"Fix",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"vip",tagLabel:"VIP",tagClass:"t-vip",bonus:"<strong>%1000 Deneme B.</strong> — %100 her alanda. Crypto + TL.",link:"#",cat:"tr casino crypto"},
+  {name1:"Matador",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"<strong>%1000 Deneme B.</strong> — %100 çevrimsiz ilk yatırım.",link:"#",cat:"global crypto casino"}
+];
+
+const tagOpts = [
+  {v:"hot",l:"HOT",c:"t-hot"},{v:"new",l:"YENİ",c:"t-new"},
+  {v:"tr",l:"TR",c:"t-tr"},{v:"vip",l:"VIP",c:"t-vip"},{v:"global",l:"GLOBAL",c:"t-gl"}
+];
+const catOpts = ["global","tr","casino","spor","crypto"];
+
+let sponsors = [];
+function loadSponsors(){
+  try{ const s=localStorage.getItem('tb_sponsors'); if(s) sponsors=JSON.parse(s); else sponsors=JSON.parse(JSON.stringify(defaultSponsors)); }
+  catch(e){ sponsors=JSON.parse(JSON.stringify(defaultSponsors)); }
+}
+function saveSponsors(){ localStorage.setItem('tb_sponsors',JSON.stringify(sponsors)); }
+
+// ---- RENDER GRID ----
+let curFilter='all';
+function renderGrid(){
+  const g=document.getElementById('sgrid'); if(!g) return;
+  const q=(document.getElementById('srchIn')||{}).value||'';
+  g.innerHTML='';
+  let v=0;
+  sponsors.forEach((s,i)=>{
+    const fullName=s.name1+s.name2;
+    const matchF=curFilter==='all'||s.cat.includes(curFilter);
+    const matchQ=!q||fullName.toLowerCase().includes(q.toLowerCase())||s.bonus.toLowerCase().includes(q.toLowerCase());
+    if(!matchF||!matchQ){ return; }
+    v++;
+    const a=document.createElement('a');
+    a.className='sc'; a.href=s.link||'#'; a.target='_blank'; a.dataset.cat=s.cat;
+    a.style.setProperty('--logo-c1',s.c1); a.style.setProperty('--logo-c2',s.c2);
+    a.innerHTML=`
+      <div class="ctop">
+        <div class="clogo"><span style="color:${s.c1}">${s.name1}</span><span style="color:${s.c2}">${s.name2}</span></div>
+        <span class="ctag ${s.tagClass}">${s.tagLabel}</span>
+      </div>
+      <div class="cbon">${s.bonus}</div>
+      <div class="cbtn">Üye Ol <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>`;
+    g.appendChild(a);
+  });
+  const b=document.getElementById('cntBadge'); if(b) b.textContent=v;
+}
+
+function setF(cat,btn){
+  curFilter=cat;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  renderGrid();
+}
+function filterCards(){ renderGrid(); }
+
+// ---- ADMIN PANEL ----
+function buildAdminList(){
+  const list=document.getElementById('adminList'); if(!list) return;
+  list.innerHTML='';
+  sponsors.forEach((s,i)=>{
+    const tagSel=tagOpts.map(t=>`<option value="${t.v}|${t.l}|${t.c}" ${s.tag===t.v?'selected':''}>${t.l}</option>`).join('');
+    const catSel=catOpts.map(c=>`<option value="${c}" ${s.cat.includes(c)?'selected':''}>${c}</option>`).join('');
+    const row=document.createElement('div');
+    row.className='arow'; row.dataset.idx=i;
+    row.innerHTML=`
+      <div class="arow-head">
+        <span class="arow-num">SPONSOR #${i+1}</span>
+        <span class="arow-preview" id="prev-${i}" style="color:${s.c1}">${s.name1}<span style="color:${s.c2}">${s.name2}</span></span>
+      </div>
+      <div class="afield"><label>İsim 1. Kısım</label><input type="text" id="n1-${i}" value="${s.name1}" oninput="previewCard(${i})"></div>
+      <div class="afield"><label>İsim 2. Kısım</label><input type="text" id="n2-${i}" value="${s.name2}" oninput="previewCard(${i})"></div>
+      <div class="arow-colors">
+        <div class="color-pick"><label>Renk 1</label><input type="color" id="c1-${i}" value="${s.c1}" oninput="previewCard(${i})"></div>
+        <div class="color-pick"><label>Renk 2</label><input type="color" id="c2-${i}" value="${s.c2}" oninput="previewCard(${i})"></div>
+      </div>
+      <div class="afield"><label>Etiket</label><select id="tag-${i}">${tagSel}</select></div>
+      <div class="afield"><label>Bonus Metni</label><input type="text" id="bon-${i}" value="${s.bonus.replace(/<[^>]+>/g,'')}"></div>
+      <div class="afield full"><label>Link (URL)</label><input type="text" id="lnk-${i}" value="${s.link}"></div>`;
+    list.appendChild(row);
+  });
+}
+function previewCard(i){
+  const n1=document.getElementById('n1-'+i).value;
+  const n2=document.getElementById('n2-'+i).value;
+  const c1=document.getElementById('c1-'+i).value;
+  const c2=document.getElementById('c2-'+i).value;
+  const prev=document.getElementById('prev-'+i);
+  if(prev) prev.innerHTML=`<span style="color:${c1}">${n1}</span><span style="color:${c2}">${n2}</span>`;
+}
+function saveAll(){
+  sponsors.forEach((s,i)=>{
+    s.name1=document.getElementById('n1-'+i).value;
+    s.name2=document.getElementById('n2-'+i).value;
+    s.c1=document.getElementById('c1-'+i).value;
+    s.c2=document.getElementById('c2-'+i).value;
+    const tagVal=document.getElementById('tag-'+i).value.split('|');
+    s.tag=tagVal[0]; s.tagLabel=tagVal[1]; s.tagClass=tagVal[2];
+    const rawBonus=document.getElementById('bon-'+i).value;
+    s.bonus=rawBonus;
+    s.link=document.getElementById('lnk-'+i).value;
+  });
+  saveSponsors();
+  renderGrid();
+  closeAdmin();
+}
+
+// ---- PAGE / MODAL CONTROLS ----
+function showPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('.mbni-item').forEach(el=>el.classList.remove('act'));
+  const mp={sponsorlar:'mn-sp',yayin:'mn-yy'};
+  if(mp[p]){ const el=document.getElementById(mp[p]); if(el) el.classList.add('act'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openIB(){document.getElementById('ibMov').classList.add('open');}
+function closeIB(){document.getElementById('ibMov').classList.remove('open');}
+function closeIBOut(e){if(e.target===document.getElementById('ibMov')) closeIB();}
+function openAdmin(){buildAdminList();document.getElementById('adminOv').classList.add('open');}
+function closeAdmin(){document.getElementById('adminOv').classList.remove('open');}
+function closeAdminOut(e){if(e.target===document.getElementById('adminOv')) closeAdmin();}
+function openMM(){document.getElementById('mmOv').classList.add('open');}
+function closeMM(e){if(!e||e.target===document.getElementById('mmOv')) document.getElementById('mmOv').classList.remove('open');}
+
+// INIT
+loadSponsors();
+renderGrid();
+</script>
+</body>
+</html>
