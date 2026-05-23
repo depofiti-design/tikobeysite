@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acc:#ff6b00;--acc2:#ff9500;--ag:rgba(255,107,0,0.13);--ab:rgba(255,107,0,0.28);
+  --bg:#080d14;--bg2:#0d1520;--bg3:#111c2a;--card:#0f1a28;
+  --brd:rgba(255,255,255,0.07);--brd2:rgba(255,255,255,0.13);
+  --tx:#e8edf5;--tx2:#8a9ab5;--tx3:#4a5a70;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;flex-direction:column;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 15% 20%,rgba(255,107,0,0.06) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+/* LOGIN */
+.login-wrap{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--bg);}
+.login-box{background:var(--bg2);border:1px solid var(--ab);border-radius:16px;padding:36px 32px;max-width:380px;width:100%;text-align:center;}
+.login-logo{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;margin-bottom:6px;}
+.login-logo span{color:var(--acc);}
+.login-sub{color:var(--tx3);font-size:13px;margin-bottom:28px;}
+.login-field{position:relative;margin-bottom:14px;}
+.login-input{width:100%;background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:13px 16px;color:var(--tx);font-size:15px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;text-align:center;letter-spacing:2px;}
+.login-input:focus{border-color:var(--ab);}
+.login-input::placeholder{letter-spacing:0;color:var(--tx3);}
+.login-btn{width:100%;background:var(--acc);color:#fff;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;padding:13px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.5px;margin-top:4px;}
+.login-btn:hover{background:var(--acc2);transform:translateY(-1px);}
+.login-err{color:#ff5252;font-size:13px;margin-top:10px;min-height:18px;}
+.login-attempts{color:var(--tx3);font-size:11px;margin-top:8px;}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:50;background:rgba(8,13,20,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd);height:60px;display:flex;align-items:center;padding:0 24px;justify-content:space-between;}
+.h-logo{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;}
+.h-logo span{color:var(--acc);}
+.h-badge{font-size:11px;background:var(--ag);color:var(--acc);border:1px solid var(--ab);border-radius:20px;padding:3px 10px;margin-left:8px;}
+.h-right{display:flex;align-items:center;gap:10px;}
+.h-save{background:var(--acc);color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;padding:8px 20px;border-radius:8px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.h-save:hover{background:var(--acc2);}
+.h-logout{background:var(--bg3);color:var(--tx2);font-size:13px;padding:7px 14px;border-radius:8px;border:1px solid var(--brd);cursor:pointer;transition:all .2s;font-family:'Barlow',sans-serif;}
+.h-logout:hover{color:var(--tx);border-color:var(--brd2);}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:800px;margin:0 auto;width:100%;padding:24px 20px 60px;}
+
+/* STATS BAR */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.stat-card{background:var(--bg2);border:1px solid var(--brd);border-radius:12px;padding:16px;text-align:center;}
+.stat-num{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--acc);}
+.stat-lbl{font-size:12px;color:var(--tx3);margin-top:2px;}
+
+/* SECTION */
+.sec-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.add-btn{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;background:var(--ag);color:var(--acc);border:1px solid var(--ab);border-radius:7px;padding:5px 14px;cursor:pointer;transition:all .2s;}
+.add-btn:hover{background:var(--acc);color:#fff;}
+
+/* SPONSOR ROWS */
+.sponsor-list{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;}
+.srow{background:var(--bg2);border:1px solid var(--brd);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+.srow:hover{border-color:rgba(255,107,0,0.2);}
+.srow-head{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;user-select:none;}
+.srow-drag{color:var(--tx3);font-size:16px;cursor:grab;}
+.srow-preview{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;flex:1;}
+.srow-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;}
+.t-hot{background:rgba(255,23,68,0.12);color:#ff5252;border:1px solid rgba(255,23,68,0.2);}
+.t-new{background:rgba(0,230,118,0.1);color:#00e676;border:1px solid rgba(0,230,118,0.18);}
+.t-tr{background:rgba(41,121,255,0.1);color:#5c9eff;border:1px solid rgba(41,121,255,0.18);}
+.t-vip{background:rgba(170,0,255,0.1);color:#cc66ff;border:1px solid rgba(170,0,255,0.18);}
+.t-gl{background:rgba(245,166,35,0.1);color:#f5a623;border:1px solid rgba(245,166,35,0.18);}
+.srow-toggle{color:var(--tx3);font-size:13px;transition:transform .2s;}
+.srow-toggle.open{transform:rotate(180deg);}
+.srow-del{background:rgba(255,23,68,0.1);color:#ff5252;border:1px solid rgba(255,23,68,0.15);border-radius:6px;padding:4px 10px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.srow-del:hover{background:#ff1744;color:#fff;}
+.srow-body{display:none;padding:0 16px 16px;border-top:1px solid var(--brd);}
+.srow-body.open{display:block;}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:11px;color:var(--tx3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.field input,.field select{background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:9px 11px;color:var(--tx);font-size:13px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;width:100%;}
+.field input:focus,.field select:focus{border-color:var(--ab);}
+.field.full{grid-column:1/-1;}
+.color-row{grid-column:1/-1;display:flex;gap:16px;align-items:flex-end;}
+.cpick{display:flex;flex-direction:column;gap:4px;}
+.cpick label{font-size:11px;color:var(--tx3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
+.cpick input[type=color]{width:52px;height:34px;border:1px solid var(--brd);border-radius:7px;padding:2px;background:var(--bg3);cursor:pointer;}
+
+/* FEATURED EDITOR */
+.feat-box{background:var(--bg2);border:1px solid var(--ab);border-radius:12px;padding:20px;margin-bottom:28px;}
+.feat-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--acc);color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;padding:12px 28px;border-radius:10px;z-index:999;transition:transform .3s;pointer-events:none;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr;}.fields{grid-template-columns:1fr;}.color-row{flex-wrap:wrap;}.feat-fields{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-logo">TIKO<span>BEY</span></div>
+    <div class="login-sub">Yönetici Girişi</div>
+    <div class="login-field">
+      <input class="login-input" type="password" id="pwInput" placeholder="Şifrenizi girin" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Giriş Yap</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-attempts" id="loginAttempts"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header id="mainHeader" style="display:none;">
+  <div style="display:flex;align-items:center;">
+    <div class="h-logo">TIKO<span>BEY</span></div>
+    <span class="h-badge">YÖNETİCİ</span>
+  </div>
+  <div class="h-right">
+    <button class="h-save" onclick="saveAll()">💾 Kaydet & Yayınla</button>
+    <button class="h-logout" onclick="doLogout()">Çıkış</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main id="mainContent" style="display:none;">
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-lbl">Toplam Sponsor</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statTR">0</div>
+      <div class="stat-lbl">Türkiye</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statGlobal">0</div>
+      <div class="stat-lbl">Global</div>
+    </div>
+  </div>
+
+  <!-- FEATURED SPONSOR -->
+  <div class="sec-title">Öne Çıkan Sponsor (Featured)</div>
+  <div class="feat-box">
+    <div class="feat-fields">
+      <div class="field"><label>Logo Metni</label><input type="text" id="f-logo" placeholder="BET"></div>
+      <div class="field"><label>Logo Renkli Kısım</label><input type="text" id="f-logo2" placeholder="TURKEY"></div>
+      <div class="field"><label>Başlık</label><input type="text" id="f-title" placeholder="Türkiye'nin En Büyük Platformu"></div>
+      <div class="field"><label>Açıklama</label><input type="text" id="f-desc" placeholder="Açıklama metni..."></div>
+      <div class="field"><label>Link (URL)</label><input type="text" id="f-link" placeholder="https://..."></div>
+      <div class="field"><label>Bonus 1</label><input type="text" id="f-b1" placeholder="%100"></div>
+      <div class="field"><label>Bonus 1 Etiket</label><input type="text" id="f-b1l" placeholder="İlk Yatırım"></div>
+      <div class="field"><label>Bonus 2</label><input type="text" id="f-b2" placeholder="1000₺"></div>
+      <div class="field"><label>Bonus 2 Etiket</label><input type="text" id="f-b2l" placeholder="Deneme B."></div>
+      <div class="field"><label>Bonus 3</label><input type="text" id="f-b3" placeholder="%35"></div>
+      <div class="field"><label>Bonus 3 Etiket</label><input type="text" id="f-b3l" placeholder="Crypto B."></div>
+    </div>
+  </div>
+
+  <!-- SPONSORS -->
+  <div class="sec-title">
+    Sponsorlar
+    <button class="add-btn" onclick="addSponsor()">+ Yeni Ekle</button>
+  </div>
+  <div class="sponsor-list" id="sponsorList"></div>
+
+</main>
+
+<div class="toast" id="toast">✓ Kaydedildi!</div>
+
+<script>
+const PASS = 'tikobey2025';
+const STORAGE_KEY = 'tb_sponsors';
+const FEATURED_KEY = 'tb_featured';
+let attempts = 0;
+let locked = false;
+
+const tagOpts = [
+  {v:'hot',l:'HOT',c:'t-hot'},
+  {v:'new',l:'YENİ',c:'t-new'},
+  {v:'tr',l:'TR',c:'t-tr'},
+  {v:'vip',l:'VIP',c:'t-vip'},
+  {v:'global',l:'GLOBAL',c:'t-gl'}
+];
+
+const defaultSponsors = [
+  {name1:"Stake",name2:"",c1:"#ff6b00",c2:"#ff6b00",tag:"global",tagLabel:"GLOBAL",tagClass:"t-gl",bonus:"$21 Bonus — Kayıt olana anında. Çevrimsiz.",link:"#",cat:"global casino"},
+  {name1:"1x",name2:"BET",c1:"#2979ff",c2:"#e8edf5",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"%100 Hoş Geldin — Global dev. Spor + casino kombine.",link:"#",cat:"global spor casino"},
+  {name1:"Grand",name2:"Pasha",c1:"#e8edf5",c2:"#ff9500",tag:"tr",tagLabel:"TR",tagClass:"t-tr",bonus:"Tıkla üye ol, 1.000₺ nakit kazan.",link:"#",cat:"tr spor casino"},
+  {name1:"Roma",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"new",tagLabel:"YENİ",tagClass:"t-new",bonus:"Linke özel 1.000₺ bonus. Limitsiz çekim.",link:"#",cat:"tr casino"},
+  {name1:"Prada",name2:"Bet",c1:"#e8edf5",c2:"#aa00ff",tag:"tr",tagLabel:"TR",tagClass:"t-tr",bonus:"%1000 Deneme B. — %100 ilk yatırım. 100₺ min.",link:"#",cat:"tr casino"},
+  {name1:"Casi",name2:"Bom",c1:"#e8edf5",c2:"#ff6b00",tag:"new",tagLabel:"YENİ",tagClass:"t-new",bonus:"%1000 Deneme B. — %300 ilk yatırım.",link:"#",cat:"tr casino"},
+  {name1:"Mars",name2:"Bahis",c1:"#e8edf5",c2:"#e8edf5",tag:"global",tagLabel:"GLOBAL",tagClass:"t-gl",bonus:"Spor bahislerinde %50 ilk yatırım.",link:"#",cat:"global spor"},
+  {name1:"Rise",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"%444 Deneme B. — %100 hoş geldin bonusu.",link:"#",cat:"global casino"},
+  {name1:"Fix",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"vip",tagLabel:"VIP",tagClass:"t-vip",bonus:"%1000 Deneme B. — %100 her alanda. Crypto + TL.",link:"#",cat:"tr casino crypto"},
+  {name1:"Matador",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"%1000 Deneme B. — %100 çevrimsiz ilk yatırım.",link:"#",cat:"global crypto casino"}
+];
+
+const defaultFeatured = {
+  logo:"BET",logo2:"TURKEY",title:"Türkiye'nin En Büyük Platformu",
+  desc:"İlk yatırımında %100 bonus, çevrimsiz 1.000₺ deneme bonusu. Sınırsız çekim.",
+  link:"#",b1:"%100",b1l:"İlk Yatırım",b2:"1000₺",b2l:"Deneme B.",b3:"%35",b3l:"Crypto B."
+};
+
+let sponsors = [];
+let featured = {};
+
+// AUTH
+function doLogin(){
+  if(locked){ document.getElementById('loginErr').textContent='Çok fazla hatalı giriş. Sayfayı yenileyin.'; return; }
+  const pw = document.getElementById('pwInput').value;
+  if(pw === PASS){
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('mainHeader').style.display='flex';
+    document.getElementById('mainContent').style.display='block';
+    loadData().then(() => { buildList(); updateStats(); });
+  } else {
+    attempts++;
+    document.getElementById('pwInput').value='';
+    if(attempts >= 5){
+      locked = true;
+      document.getElementById('loginErr').textContent='Çok fazla hatalı giriş!';
+      document.getElementById('loginAttempts').textContent='';
+    } else {
+      document.getElementById('loginErr').textContent='Hatalı şifre!';
+      document.getElementById('loginAttempts').textContent=(5-attempts)+' deneme hakkınız kaldı.';
+    }
+  }
+}
+function doLogout(){
+  document.getElementById('mainHeader').style.display='none';
+  document.getElementById('mainContent').style.display='none';
+  document.getElementById('loginWrap').style.display='flex';
+  document.getElementById('pwInput').value='';
+  document.getElementById('loginErr').textContent='';
+}
+
+// SUPABASE CONFIG
+const SUPA_URL = "https://rfuwnjsyulpmdyespacd.supabase.co";
+const SUPA_KEY = "sb_publishable_BeRLk3mCeFsA2MqHPKQ0CA_CvbzLdyd";
+
+function sbHeaders() {
+  return {"apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY, "Content-Type": "application/json", "Prefer": "return=representation"};
+}
+
+// DATA
+async function loadData(){
+  try {
+    // Load sponsors
+    const r = await fetch(SUPA_URL + "/rest/v1/sponsors?order=sort_order.asc", {headers: sbHeaders()});
+    const data = await r.json();
+    sponsors = (data && data.length > 0) ? data.map(s => ({
+      id: s.id, name1: s.name1||"", name2: s.name2||"",
+      c1: s.c1||"#ff6b00", c2: s.c2||"#e8edf5",
+      tag: s.tag||"new", tagLabel: s.tag_label||"YENİ", tagClass: s.tag_class||"t-new",
+      bonus: s.bonus||"", link: s.link||"#", cat: s.cat||"global", sort_order: s.sort_order||0
+    })) : JSON.parse(JSON.stringify(defaultSponsors));
+    // Load featured
+    const rf = await fetch(SUPA_URL + "/rest/v1/featured?limit=1", {headers: sbHeaders()});
+    const fdata = await rf.json();
+    featured = (fdata && fdata.length > 0) ? fdata[0] : {...defaultFeatured};
+    featured.desc = featured.description || featured.desc || "";
+  } catch(e) {
+    sponsors = JSON.parse(JSON.stringify(defaultSponsors));
+    featured = {...defaultFeatured};
+    console.log("Load error:", e);
+  }
+  ['logo','logo2','title','desc','link','b1','b1l','b2','b2l','b3','b3l'].forEach(k => {
+    const el = document.getElementById('f-'+k);
+    if(el) el.value = featured[k] || '';
+  });
+}
+
+async function saveAll(){
+  // Collect featured
+  ['logo','logo2','title','link','b1','b1l','b2','b2l','b3','b3l'].forEach(k => {
+    const el = document.getElementById('f-'+k);
+    if(el) featured[k] = el.value;
+  });
+  const titleEl = document.getElementById('f-title');
+  if(titleEl) featured.title = titleEl.value;
+  const descEl = document.getElementById('f-desc');
+  if(descEl) { featured.description = descEl.value; featured.desc = descEl.value; }
+
+  // Collect sponsors from form
+  sponsors.forEach((s,i) => {
+    const g = document.querySelector('[data-idx="'+i+'"]');
+    if(!g) return;
+    s.name1 = g.querySelector('.fn1').value;
+    s.name2 = g.querySelector('.fn2').value;
+    s.c1 = g.querySelector('.fc1').value;
+    s.c2 = g.querySelector('.fc2').value;
+    const tv = g.querySelector('.ftag').value.split('|');
+    s.tag = tv[0]; s.tagLabel = tv[1]; s.tagClass = tv[2];
+    s.tag_label = tv[1]; s.tag_class = tv[2];
+    s.bonus = g.querySelector('.fbon').value;
+    s.link = g.querySelector('.flnk').value;
+    s.cat = g.querySelector('.fcat').value;
+    s.sort_order = i;
+  });
+
+  showToast('⏳ Kaydediliyor...');
+
+  try {
+    // Save featured - upsert
+    const featPayload = {
+      logo: featured.logo, logo2: featured.logo2,
+      title: featured.title, description: featured.description||featured.desc,
+      link: featured.link,
+      b1: featured.b1, b1l: featured.b1l,
+      b2: featured.b2, b2l: featured.b2l,
+      b3: featured.b3, b3l: featured.b3l
+    };
+    if(featured.id) {
+      await fetch(SUPA_URL + "/rest/v1/featured?id=eq." + featured.id, {
+        method: "PATCH", headers: sbHeaders(), body: JSON.stringify(featPayload)
+      });
+    } else {
+      const fr = await fetch(SUPA_URL + "/rest/v1/featured", {
+        method: "POST", headers: sbHeaders(), body: JSON.stringify(featPayload)
+      });
+      const fres = await fr.json();
+      if(fres && fres[0]) featured.id = fres[0].id;
+    }
+
+    // Delete all sponsors and re-insert
+    await fetch(SUPA_URL + "/rest/v1/sponsors?id=gt.0", {
+      method: "DELETE", headers: sbHeaders()
+    });
+
+    for(let i=0; i<sponsors.length; i++){
+      const s = sponsors[i];
+      await fetch(SUPA_URL + "/rest/v1/sponsors", {
+        method: "POST", headers: sbHeaders(),
+        body: JSON.stringify({
+          name1: s.name1, name2: s.name2,
+          c1: s.c1, c2: s.c2,
+          tag: s.tag, tag_label: s.tagLabel, tag_class: s.tagClass,
+          bonus: s.bonus, link: s.link, cat: s.cat, sort_order: i
+        })
+      });
+    }
+
+    updateStats();
+    showToast('✓ Kaydedildi! Ana sitede yansıdı.');
+  } catch(e) {
+    console.log("Save error:", e);
+    showToast('❌ Hata! Konsolu kontrol et.');
+  }
+}
+
+// LIST
+function buildList(){
+  const list=document.getElementById('sponsorList');
+  list.innerHTML='';
+  sponsors.forEach((s,i)=>{ list.appendChild(makeRow(s,i)); });
+}
+function makeRow(s,i){
+  const div=document.createElement('div');
+  div.className='srow'; div.dataset.idx=i;
+  const tagSel=tagOpts.map(t=>`<option value="${t.v}|${t.l}|${t.c}" ${s.tag===t.v?'selected':''}>${t.l}</option>`).join('');
+  div.innerHTML=`
+    <div class="srow-head" onclick="toggleRow(${i})">
+      <span class="srow-drag">⠿</span>
+      <span class="srow-preview" id="rp-${i}" style="color:${s.c1}">${s.name1}<span style="color:${s.c2}">${s.name2}</span></span>
+      <span class="srow-tag ${s.tagClass}">${s.tagLabel}</span>
+      <button class="srow-del" onclick="event.stopPropagation();delSponsor(${i})">Sil</button>
+      <span class="srow-toggle" id="rt-${i}">▼</span>
+    </div>
+    <div class="srow-body" id="rb-${i}">
+      <div class="fields">
+        <div class="field"><label>İsim 1. Kısım</label><input class="fn1" type="text" value="${s.name1}" oninput="previewRow(${i})"></div>
+        <div class="field"><label>İsim 2. Kısım</label><input class="fn2" type="text" value="${s.name2}" oninput="previewRow(${i})"></div>
+        <div class="color-row">
+          <div class="cpick"><label>Renk 1</label><input class="fc1" type="color" value="${s.c1}" oninput="previewRow(${i})"></div>
+          <div class="cpick"><label>Renk 2</label><input class="fc2" type="color" value="${s.c2}" oninput="previewRow(${i})"></div>
+        </div>
+        <div class="field"><label>Etiket</label><select class="ftag">${tagSel}</select></div>
+        <div class="field full"><label>Bonus Metni</label><input class="fbon" type="text" value="${s.bonus}"></div>
+        <div class="field full"><label>Link (URL)</label><input class="flnk" type="text" value="${s.link}" placeholder="https://..."></div>
+        <div class="field full"><label>Kategori (boşlukla ayır)</label><input class="fcat" type="text" value="${s.cat}" placeholder="tr casino global spor crypto"></div>
+      </div>
+    </div>`;
+  return div;
+}
+function toggleRow(i){
+  const body=document.getElementById('rb-'+i);
+  const tog=document.getElementById('rt-'+i);
+  const open=body.classList.toggle('open');
+  tog.classList.toggle('open',open);
+}
+function previewRow(i){
+  const g=document.querySelector('[data-idx="'+i+'"]');
+  if(!g) return;
+  const n1=g.querySelector('.fn1').value;
+  const n2=g.querySelector('.fn2').value;
+  const c1=g.querySelector('.fc1').value;
+  const c2=g.querySelector('.fc2').value;
+  const prev=document.getElementById('rp-'+i);
+  if(prev) prev.innerHTML=`<span style="color:${c1}">${n1}</span><span style="color:${c2}">${n2}</span>`;
+}
+function addSponsor(){
+  sponsors.push({name1:"Yeni",name2:"Sponsor",c1:"#ff6b00",c2:"#e8edf5",tag:"new",tagLabel:"YENİ",tagClass:"t-new",bonus:"Bonus metni...",link:"#",cat:"global"});
+  buildList(); updateStats();
+  // scroll to bottom & open last
+  const last=sponsors.length-1;
+  setTimeout(()=>{ toggleRow(last); document.querySelector('[data-idx="'+last+'"]').scrollIntoView({behavior:'smooth',block:'center'}); },100);
+}
+function delSponsor(i){
+  if(!confirm('"'+sponsors[i].name1+sponsors[i].name2+'" sponsorunu silmek istediğinize emin misiniz?')) return;
+  sponsors.splice(i,1);
+  buildList(); updateStats();
+}
+function updateStats(){
+  document.getElementById('statTotal').textContent=sponsors.length;
+  document.getElementById('statTR').textContent=sponsors.filter(s=>s.cat.includes('tr')).length;
+  document.getElementById('statGlobal').textContent=sponsors.filter(s=>s.cat.includes('global')).length;
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// Enter key on login
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&document.getElementById('loginWrap').style.display!=='none') doLogin(); });
+</script>
+</body>
+</html>
