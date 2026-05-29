@@ -347,14 +347,14 @@ async function saveBanners() {
 
 
 // ---- SITE AYARLARI ----
-let settings = {};
+let siteSettings = {};
 
 async function loadSettings() {
   try {
     const r = await fetch(SUPA_URL + "/rest/v1/settings", {headers: sbHeaders()});
     const data = await r.json();
     if(data && data.length > 0) {
-      data.forEach(s => { settings[s.key] = s.value; });
+      data.forEach(s => { siteSettings[s.key] = s.value; });
     }
     renderSettings();
   } catch(e) { console.log("Settings load error", e); }
@@ -395,20 +395,20 @@ async function saveSettings() {
       method: "PATCH", headers: sbHeaders(),
       body: JSON.stringify({value: val})
     });
-    settings[key] = val;
+    siteSettings[key] = val;
   }
 }
 
 
 // ---- SITE AYARLARI ----
-let settings = {};
+let siteSettings = {};
 
 async function loadSettings() {
   try {
     const r = await fetch(SUPA_URL + "/rest/v1/settings", {headers: sbHeaders()});
     const data = await r.json();
     if(data && data.length > 0) {
-      data.forEach(s => { settings[s.key] = s.value; });
+      data.forEach(s => { siteSettings[s.key] = s.value; });
     }
     renderSettings();
   } catch(e) { console.log("Settings load error", e); }
@@ -429,7 +429,7 @@ function renderSettings() {
   g.innerHTML = fields.map(f => `
     <div class="field">
       <label>${f.label}</label>
-      <input type="text" id="setting-${f.key}" value="${settings[f.key]||''}" placeholder="${f.placeholder}"
+      <input type="text" id="setting-${f.key}" value="${siteSettings[f.key]||''}" placeholder="${f.placeholder}"
         style="background:var(--bg3);border:1px solid var(--brd);border-radius:7px;padding:9px 11px;color:var(--tx);font-size:13px;font-family:'Barlow',sans-serif;outline:none;width:100%;">
     </div>
   `).join('');
@@ -445,7 +445,7 @@ async function saveSettings() {
       method: "PATCH", headers: sbHeaders(),
       body: JSON.stringify({value: val})
     });
-    settings[key] = val;
+    siteSettings[key] = val;
   }
 }
 
