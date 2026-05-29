@@ -669,32 +669,31 @@ async function loadBanners() {
         else el.removeAttribute('href');
       }
     });
-  } catch(e) { console.log("Banner load error", e); }
+  } catch(e) { console.log("Banner error", e); }
 }
 
-
-async function loadSettings() {
+async function loadSiteSettings() {
   try {
     const r = await fetch(SUPA_URL + "/rest/v1/settings", {
       headers: {"apikey": SUPA_KEY, "Authorization": "Bearer " + SUPA_KEY}
     });
     const data = await r.json();
-    if(!data || !data.length) return;
+    if (!data || !data.length) return;
     const s = {};
     data.forEach(row => { s[row.key] = row.value; });
 
     // Telegram butonu
-    const tgBtns = document.querySelectorAll('a.btn-tg');
-    tgBtns.forEach(btn => { if(s.telegram_url) btn.href = s.telegram_url; });
+    document.querySelectorAll('a.btn-tg').forEach(a => { if(s.telegram_url) a.href = s.telegram_url; });
 
     // Duyuru kanalı
-    const duyuruBtns = document.querySelectorAll('a.btn-duyuru');
-    duyuruBtns.forEach(btn => { if(s.duyuru_url) btn.href = s.duyuru_url; });
+    document.querySelectorAll('a.btn-duyuru').forEach(a => { if(s.duyuru_url) a.href = s.duyuru_url; });
 
-    // İş birliği linkleri
+    // İş birliği - Telegram
     if(s.marketing_url) {
       document.querySelectorAll('a[href*="tikobeymarketing"]').forEach(a => a.href = s.marketing_url);
     }
+
+    // İş birliği - Mail
     if(s.mail) {
       document.querySelectorAll('a[href*="mailto"]').forEach(a => a.href = 'mailto:' + s.mail);
     }
@@ -708,16 +707,6 @@ async function loadSettings() {
     if(s.kick_url && s.kick_url !== '#') {
       document.querySelectorAll('a[href*="kick.com"]').forEach(a => a.href = s.kick_url);
     }
-
-    // Site başlığı
-    if(s.site_title) {
-      const logo = document.querySelector('.nav-logo');
-      if(logo) {
-        const parts = s.site_title.split('');
-        const half = Math.ceil(parts.length / 2);
-        logo.innerHTML = parts.slice(0,half).join('') + '<span>' + parts.slice(half).join('') + '</span>';
-      }
-    }
   } catch(e) { console.log("Settings error", e); }
 }
 
@@ -725,7 +714,7 @@ async function loadSettings() {
 loadSponsors();
 loadFromSupabase().then(() => renderGrid());
 loadBanners();
-loadSettings();
+loadSiteSettings();
 </script>
 </body>
 </html>
