@@ -583,6 +583,7 @@ function showPage(p){
   const mp={sponsorlar:'mn-sp',yayin:'mn-yy'};
   if(mp[p]){ const el=document.getElementById(mp[p]); if(el) el.classList.add('act'); }
   window.scrollTo({top:0,behavior:'smooth'});
+  if(p==='yayin') loadSiteSettings();
 }
 function openIB(){document.getElementById('ibMov').classList.add('open');}
 function closeIB(){document.getElementById('ibMov').classList.remove('open');}
