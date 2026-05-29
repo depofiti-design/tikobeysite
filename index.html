@@ -393,11 +393,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,13,20,0.95);backdrop-fil
   </div>
   <div class="ywrap">
     <div class="ygrid">
-      <a class="ycard" href="#" target="_blank">
+      <a class="ycard" id="youtube-link" href="#" target="_blank">
         <div class="yhero yh-yt"><div style="width:58px;height:58px;border-radius:14px;background:rgba(255,0,0,0.13);display:flex;align-items:center;justify-content:center;"><svg width="30" height="30" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg></div><div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#ff5252;">YouTube</div></div>
         <div class="yinfo"><div class="yname">TikoBey YouTube</div><div class="ydesc">Casino & bahis videoları, canlı yayın kayıtları. Hemen abone ol!</div><span class="ybtn yb-yt">Kanala Git →</span></div>
       </a>
-      <a class="ycard" href="#" target="_blank">
+      <a class="ycard" id="kick-link" href="#" target="_blank">
         <div class="yhero yh-kick"><div style="width:58px;height:58px;border-radius:14px;background:rgba(83,252,24,0.1);display:flex;align-items:center;justify-content:center;"><svg width="36" height="22" viewBox="0 0 50 28"><text x="0" y="22" font-size="22" font-weight="900" fill="#53fc18" font-family="Arial Black">KICK</text></svg></div><div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;color:#53fc18;">Kick</div></div>
         <div class="yinfo"><div class="yname">TikoBey Kick</div><div class="ydesc">Canlı casino ve slot yayınları. Gerçek zamanlı büyük vuruşlar!</div><span class="ybtn yb-kick">Kanala Git →</span></div>
       </a>
@@ -700,12 +700,16 @@ async function loadSiteSettings() {
 
     // YouTube
     if(s.youtube_url && s.youtube_url !== '#') {
+      const yt = document.getElementById('youtube-link');
+      if(yt) yt.href = s.youtube_url;
       document.querySelectorAll('a[href*="youtube"]').forEach(a => a.href = s.youtube_url);
     }
 
     // Kick
     if(s.kick_url && s.kick_url !== '#') {
-      document.querySelectorAll('a[href*="kick.com"]').forEach(a => a.href = s.kick_url);
+      const kk = document.getElementById('kick-link');
+      if(kk) kk.href = s.kick_url;
+      document.querySelectorAll('a[href*="kick"]').forEach(a => a.href = s.kick_url);
     }
   } catch(e) { console.log("Settings error", e); }
 }
