@@ -225,19 +225,14 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,13,20,0.95);backdrop-fil
   <div class="nav-logo" onclick="showPage('sponsorlar')">TIKO<span>BEY</span></div>
   <div style="display:flex;align-items:center;gap:2px;" class="nav-links-desktop">
     <span class="nl act" onclick="showPage('sponsorlar')">Sponsorlar</span>
-    <div class="nav-drop">
-      <span class="nl" style="display:flex;align-items:center;gap:4px;">Yayın <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></span>
-      <div class="nd-menu">
-        <a class="di" href="#" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
-          YouTube Kanalı
-        </a>
-        <a class="di" href="#" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 32 18"><text x="0" y="15" font-size="15" font-weight="900" fill="#53fc18" font-family="Arial Black">KICK</text></svg>
-          Kick Kanalı
-        </a>
-      </div>
-    </div>
+    <a class="nl" id="nav-yt" href="#" target="_blank" style="display:flex;align-items:center;gap:6px;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      YouTube
+    </a>
+    <a class="nl" id="nav-kick" href="#" target="_blank" style="display:flex;align-items:center;gap:6px;">
+      <svg width="28" height="14" viewBox="0 0 32 18"><text x="0" y="14" font-size="13" font-weight="900" fill="#53fc18" font-family="Arial Black">KICK</text></svg>
+      Kick
+    </a>
   </div>
   <div class="nav-r">
     <a class="btn-duyuru" href="https://t.me/tikobeyduru" target="_blank">
@@ -701,16 +696,14 @@ async function loadSiteSettings() {
 
     // YouTube
     if(s.youtube_url && s.youtube_url !== '#') {
-      const yt = document.getElementById('youtube-link');
+      const yt = document.getElementById('nav-yt');
       if(yt) yt.href = s.youtube_url;
-      document.querySelectorAll('a[href*="youtube"]').forEach(a => a.href = s.youtube_url);
     }
 
     // Kick
     if(s.kick_url && s.kick_url !== '#') {
-      const kk = document.getElementById('kick-link');
+      const kk = document.getElementById('nav-kick');
       if(kk) kk.href = s.kick_url;
-      document.querySelectorAll('a[href*="kick"]').forEach(a => a.href = s.kick_url);
     }
   } catch(e) { console.log("Settings error", e); }
 }
