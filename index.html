@@ -166,37 +166,6 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,13,20,0.95);backdrop-fil
 .mls{font-size:11px;color:var(--tx3);margin-top:1px;}
 .mla{margin-left:auto;color:var(--tx3);}
 
-/* ADMIN PANEL */
-.admin-ov{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
-.admin-ov.open{display:flex;}
-.admin-box{background:var(--bg2);border:1px solid rgba(255,107,0,0.2);border-radius:16px;padding:28px 24px;max-width:700px;width:100%;margin:auto;position:relative;}
-.admin-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;margin-bottom:4px;}
-.admin-title span{color:var(--acc);}
-.admin-sub{color:var(--tx2);font-size:12px;margin-bottom:22px;}
-.admin-list{display:flex;flex-direction:column;gap:10px;max-height:70vh;overflow-y:auto;padding-right:4px;}
-.admin-list::-webkit-scrollbar{width:4px;}
-.admin-list::-webkit-scrollbar-track{background:transparent;}
-.admin-list::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
-.arow{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.arow-head{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.arow-num{font-family:'Rajdhani',sans-serif;font-size:12px;color:var(--tx3);font-weight:600;letter-spacing:1px;}
-.arow-preview{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;}
-.afield{display:flex;flex-direction:column;gap:4px;}
-.afield label{font-size:11px;color:var(--tx3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
-.afield input,.afield select{background:var(--bg2);border:1px solid var(--brd);border-radius:7px;padding:8px 10px;color:var(--tx);font-size:13px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;width:100%;}
-.afield input:focus,.afield select:focus{border-color:var(--ab);}
-.afield.full{grid-column:1/-1;}
-.arow-colors{grid-column:1/-1;display:flex;gap:12px;align-items:center;}
-.color-pick{display:flex;flex-direction:column;gap:4px;}
-.color-pick label{font-size:11px;color:var(--tx3);font-weight:500;letter-spacing:.5px;text-transform:uppercase;}
-.color-pick input[type=color]{width:48px;height:32px;border:1px solid var(--brd);border-radius:6px;padding:2px;background:var(--bg2);cursor:pointer;}
-.asave{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;}
-.abtn{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;padding:10px 22px;border-radius:9px;cursor:pointer;transition:all .2s;border:none;letter-spacing:.3px;}
-.abtn-save{background:var(--acc);color:#fff;}
-.abtn-save:hover{background:var(--acc2);}
-.abtn-cancel{background:var(--bg3);color:var(--tx2);border:1px solid var(--brd);}
-.abtn-cancel:hover{color:var(--tx);}
-
 /* MOBILE BOTTOM NAV */
 .mbnav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(6,10,16,0.97);border-top:1px solid var(--brd);padding:7px 0 env(safe-area-inset-bottom,7px);backdrop-filter:blur(20px);}
 .mbni{display:flex;justify-content:space-around;}
@@ -206,7 +175,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,13,20,0.95);backdrop-fil
 
 /* RESPONSIVE */
 @media(max-width:900px){.nav-r{display:none;}.ham{display:flex;}nav{padding:0 16px;}}
-@media(max-width:768px){.mbnav{display:block;}.sgrid{grid-template-columns:1fr 1fr;gap:8px;}.fc{flex-direction:column;gap:12px;}.fc-logo{min-width:unset;}.mwrap,.ywrap{padding:0 12px 90px;}.fw,.bwrap{padding:0 12px;}.ygrid{grid-template-columns:1fr;}.arow{grid-template-columns:1fr;}}
+@media(max-width:768px){.mbnav{display:block;}.sgrid{grid-template-columns:1fr 1fr;gap:8px;}.fc{flex-direction:column;gap:12px;}.fc-logo{min-width:unset;}.mwrap,.ywrap{padding:0 12px 90px;}.fw,.bwrap{padding:0 12px;}.ygrid{grid-template-columns:1fr;}}
 @media(max-width:380px){.sgrid{grid-template-columns:1fr 1fr;gap:6px;}.sc{padding:11px 10px;}}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
@@ -426,20 +395,6 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,13,20,0.95);backdrop-fil
   </div>
 </div>
 
-<!-- ADMİN PANELİ -->
-<div class="admin-ov" id="adminOv" onclick="closeAdminOut(event)">
-  <div class="admin-box">
-    <button class="mclose" onclick="closeAdmin()">✕</button>
-    <div class="admin-title">Yönetici <span>Paneli</span></div>
-    <div class="admin-sub">Sponsor kartlarını düzenle. Değişiklikler anında uygulanır ve tarayıcıya kaydedilir.</div>
-    <div class="admin-list" id="adminList"></div>
-    <div class="asave">
-      <button class="abtn abtn-cancel" onclick="closeAdmin()">Kapat</button>
-      <button class="abtn abtn-save" onclick="saveAll()">💾 Kaydet & Uygula</button>
-    </div>
-  </div>
-</div>
-
 <!-- MOBILE BOTTOM NAV -->
 <div class="mbnav">
   <div class="mbni">
@@ -470,18 +425,11 @@ const defaultSponsors = [
   {name1:"Matador",name2:"Bet",c1:"#e8edf5",c2:"#ff6b00",tag:"hot",tagLabel:"HOT",tagClass:"t-hot",bonus:"<strong>%1000 Deneme B.</strong> — %100 çevrimsiz ilk yatırım.",link:"#",cat:"global crypto casino"}
 ];
 
-const tagOpts = [
-  {v:"hot",l:"HOT",c:"t-hot"},{v:"new",l:"YENİ",c:"t-new"},
-  {v:"tr",l:"TR",c:"t-tr"},{v:"vip",l:"VIP",c:"t-vip"},{v:"global",l:"GLOBAL",c:"t-gl"}
-];
-const catOpts = ["global","tr","casino","spor","crypto"];
-
 let sponsors = [];
 function loadSponsors(){
   try{ const s=localStorage.getItem('tb_sponsors'); if(s) sponsors=JSON.parse(s); else sponsors=JSON.parse(JSON.stringify(defaultSponsors)); }
   catch(e){ sponsors=JSON.parse(JSON.stringify(defaultSponsors)); }
 }
-function saveSponsors(){ localStorage.setItem('tb_sponsors',JSON.stringify(sponsors)); }
 
 // ---- RENDER GRID ----
 let curFilter='all';
@@ -519,57 +467,6 @@ function setF(cat,btn){
 }
 function filterCards(){ renderGrid(); }
 
-// ---- ADMIN PANEL ----
-function buildAdminList(){
-  const list=document.getElementById('adminList'); if(!list) return;
-  list.innerHTML='';
-  sponsors.forEach((s,i)=>{
-    const tagSel=tagOpts.map(t=>`<option value="${t.v}|${t.l}|${t.c}" ${s.tag===t.v?'selected':''}>${t.l}</option>`).join('');
-    const catSel=catOpts.map(c=>`<option value="${c}" ${s.cat.includes(c)?'selected':''}>${c}</option>`).join('');
-    const row=document.createElement('div');
-    row.className='arow'; row.dataset.idx=i;
-    row.innerHTML=`
-      <div class="arow-head">
-        <span class="arow-num">SPONSOR #${i+1}</span>
-        <span class="arow-preview" id="prev-${i}" style="color:${s.c1}">${s.name1}<span style="color:${s.c2}">${s.name2}</span></span>
-      </div>
-      <div class="afield"><label>İsim 1. Kısım</label><input type="text" id="n1-${i}" value="${s.name1}" oninput="previewCard(${i})"></div>
-      <div class="afield"><label>İsim 2. Kısım</label><input type="text" id="n2-${i}" value="${s.name2}" oninput="previewCard(${i})"></div>
-      <div class="arow-colors">
-        <div class="color-pick"><label>Renk 1</label><input type="color" id="c1-${i}" value="${s.c1}" oninput="previewCard(${i})"></div>
-        <div class="color-pick"><label>Renk 2</label><input type="color" id="c2-${i}" value="${s.c2}" oninput="previewCard(${i})"></div>
-      </div>
-      <div class="afield"><label>Etiket</label><select id="tag-${i}">${tagSel}</select></div>
-      <div class="afield"><label>Bonus Metni</label><input type="text" id="bon-${i}" value="${s.bonus.replace(/<[^>]+>/g,'')}"></div>
-      <div class="afield full"><label>Link (URL)</label><input type="text" id="lnk-${i}" value="${s.link}"></div>`;
-    list.appendChild(row);
-  });
-}
-function previewCard(i){
-  const n1=document.getElementById('n1-'+i).value;
-  const n2=document.getElementById('n2-'+i).value;
-  const c1=document.getElementById('c1-'+i).value;
-  const c2=document.getElementById('c2-'+i).value;
-  const prev=document.getElementById('prev-'+i);
-  if(prev) prev.innerHTML=`<span style="color:${c1}">${n1}</span><span style="color:${c2}">${n2}</span>`;
-}
-function saveAll(){
-  sponsors.forEach((s,i)=>{
-    s.name1=document.getElementById('n1-'+i).value;
-    s.name2=document.getElementById('n2-'+i).value;
-    s.c1=document.getElementById('c1-'+i).value;
-    s.c2=document.getElementById('c2-'+i).value;
-    const tagVal=document.getElementById('tag-'+i).value.split('|');
-    s.tag=tagVal[0]; s.tagLabel=tagVal[1]; s.tagClass=tagVal[2];
-    const rawBonus=document.getElementById('bon-'+i).value;
-    s.bonus=rawBonus;
-    s.link=document.getElementById('lnk-'+i).value;
-  });
-  saveSponsors();
-  renderGrid();
-  closeAdmin();
-}
-
 // ---- PAGE / MODAL CONTROLS ----
 function showPage(p){
   document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
@@ -583,28 +480,8 @@ function showPage(p){
 function openIB(){document.getElementById('ibMov').classList.add('open');}
 function closeIB(){document.getElementById('ibMov').classList.remove('open');}
 function closeIBOut(e){if(e.target===document.getElementById('ibMov')) closeIB();}
-function openAdmin(){buildAdminList();document.getElementById('adminOv').classList.add('open');}
-function closeAdmin(){document.getElementById('adminOv').classList.remove('open');}
-function closeAdminOut(e){if(e.target===document.getElementById('adminOv')) closeAdmin();}
 function openMM(){document.getElementById('mmOv').classList.add('open');}
 function closeMM(e){if(!e||e.target===document.getElementById('mmOv')) document.getElementById('mmOv').classList.remove('open');}
-
-// ---- GİZLİ ADMIN KISAYOLU ----
-// Klavyede sırayla: t - i - k - o  →  şifre sor
-let _seq = '';
-const _code = 'tiko';
-const _pass = 'tikobey2025';
-document.addEventListener('keydown', function(e) {
-  _seq += e.key.toLowerCase();
-  if (_seq.length > _code.length) _seq = _seq.slice(-_code.length);
-  if (_seq === _code) {
-    _seq = '';
-    const pw = prompt('🔐 Yönetici Şifresi:');
-    if (pw === _pass) { buildAdminList(); document.getElementById('adminOv').classList.add('open'); }
-    else if (pw !== null) alert('Hatalı şifre.');
-  }
-});
-
 
 const SUPA_URL = "https://rfuwnjsyulpmdyespacd.supabase.co";
 const SUPA_KEY = "sb_publishable_BeRLk3mCeFsA2MqHPKQ0CA_CvbzLdyd";
