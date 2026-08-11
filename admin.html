@@ -341,16 +341,18 @@ async function saveAll() {
     // Save sponsors
     await fetch(SUPA_URL+"/rest/v1/sponsors?id=gt.0",{method:"DELETE",headers:sbH()});
     const g = document.querySelectorAll('.srow');
+    let sponsorFailCount = 0;
     for(let i=0;i<g.length;i++){
       const row=g[i];
       const tv=row.querySelector('.ftag').value.split('|');
-      await fetch(SUPA_URL+"/rest/v1/sponsors",{method:"POST",headers:sbH(),body:JSON.stringify({
+      const sr = await fetch(SUPA_URL+"/rest/v1/sponsors",{method:"POST",headers:sbH(),body:JSON.stringify({
         name1:row.querySelector('.fn1').value, name2:row.querySelector('.fn2').value,
         c1:row.querySelector('.fc1').value, c2:row.querySelector('.fc2').value,
         tag:tv[0], tag_label:tv[1], tag_class:tv[2],
         bonus:row.querySelector('.fbon').value, link:row.querySelector('.flnk').value,
         cat:row.querySelector('.fcat').value, sort_order:i
       })});
+      if(!sr.ok) sponsorFailCount++;
     }
 
     // Save banners
@@ -373,7 +375,12 @@ async function saveAll() {
     }
 
     await loadSponsors(); buildSponsorList(); updateStats();
-    showToast('✓ Kaydedildi! Ana sitede yansıdı.');
+    if(sponsorFailCount > 0 || sponsors.length !== g.length) {
+      showToast('⚠️ Eksik kaydedildi, kontrol et!');
+      alert(g.length + ' sponsordan sadece ' + sponsors.length + ' tanesi kaydedildi. Sayfayı kapatmadan önce eksik olan(lar)ı tekrar ekleyip "Kaydet & Yayınla"ya tekrar bas.');
+    } else {
+      showToast('✓ Kaydedildi! Ana sitede yansıdı.');
+    }
   } catch(e) {
     console.log("Save error:", e);
     showToast('❌ Hata oluştu!');
